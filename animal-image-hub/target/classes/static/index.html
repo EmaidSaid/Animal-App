@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animal Image App</title>
+</head>
+<body>
+
+<h1>Animal Image App</h1>
+
+<select id="type">
+    <option value="cat">Cat</option>
+    <option value="dog">Dog</option>
+    <option value="bear">Bear</option>
+</select>
+
+<input id="count" type="number" value="1">
+
+<button onclick="fetchImages()">Fetch</button>
+
+<div id="images"></div>
+
+<hr>
+
+<button onclick="getLast()">Get Last</button>
+
+<div id="last"></div>
+
+<script>
+async function fetchImages() {
+    const type = document.getElementById("type").value;
+    const count = document.getElementById("count").value;
+
+    const res = await fetch(`/api/images/fetch?type=${type}&count=${count}`, {
+        method: "POST"
+    });
+
+    const data = await res.json();
+
+    const div = document.getElementById("images");
+    div.innerHTML = "";
+
+    data.forEach(i => {
+        const img = document.createElement("img");
+        img.src = i.url;
+        img.width = 200;
+        div.appendChild(img);
+    });
+}
+
+async function getLast() {
+    const type = document.getElementById("type").value;
+
+    const res = await fetch(`/api/images/last?type=${type}`);
+    const data = await res.json();
+
+    const div = document.getElementById("last");
+    div.innerHTML = "";
+
+    const img = document.createElement("img");
+    img.src = data.url;
+    img.width = 200;
+
+    div.appendChild(img);
+}
+</script>
+
+</body>
+</html>
